@@ -22,42 +22,28 @@ void generate_graph(Graph *g, std::string filename)
         die("Check if file exists!");
     }
 
-    int weight;
-    string title, word, line, cur_person;
+    float weight;
+    string fromAirport, destinationAirport, line, word;
 
-    vector<string> people;
-
-    std::getline(file, line);
-    stringstream lineStream(line);
-
-    // read in vertices
-    while (std::getline(lineStream, word, ','))
-    {
-        if (word != "people")
-        {
-            g->addVertex(word);
-            people.push_back(word);
-        }
-    }
-
-    // read in edges
     while (std::getline(file, line))
     {
         stringstream lineStream(line);
-        // get the name of the person
+
+        // parse the csv row
         std::getline(lineStream, word, ',');
-        cur_person = word;
+        fromAirport = word;
 
-        // cycle through potential edges
-        for (int i = 0; i < people.size(); i++)
-        {
-            std::getline(lineStream, word, ',');
-            weight = atoi(word.c_str());
+        std::getline(lineStream, word, ',');
+        destinationAirport = word;
 
-            // add edge to graph if not -1
-            if (weight != -1 && weight != 0)
-                g->addEdge(cur_person, people[i], weight);
-        }
+        std::getline(lineStream, word, ',');
+        weight = atof(word.c_str());
+
+        g->addVertex(fromAirport);        // won't add if already exists
+        g->addVertex(destinationAirport); // won't add if already exists
+
+        // add one directional edge
+        g->addEdge(fromAirport, destinationAirport, weight);
     }
 }
 
@@ -65,8 +51,8 @@ int main(int argc, const char *argv[])
 {
     Graph g;
     string menuStr = "======Main Menu======\n"
-                   "1. Print vertices\n"
-                   "5. Quit\n";
+                     "1. Print vertices\n"
+                     "5. Quit\n";
 
     if (argc < 2)
     {

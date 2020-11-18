@@ -13,47 +13,19 @@ void Graph::addEdge(string v1, string v2, int weight)
 {
     for (int i = 0; i < vertices.size(); i++)
     {
+        // find the first vertex
         if (vertices[i].name == v1)
-        { // find the first vertex
+        {
             for (int x = 0; x < vertices.size(); x++)
             {
+                // find the second vertex
                 if (vertices[x].name == v2 && i != x)
-                { // find the second vertex
-
-                    // check if the edge already exists
-                    bool alreadyInFirst = false;
-                    bool alreadyInSecond = false;
-                    for (adjVertex adj : vertices[i].adj)
-                    {
-                        if (adj.weight == weight && adj.v->name == v2)
-                        {
-                            alreadyInFirst = true;
-                        }
-                    }
-                    for (adjVertex adj : vertices[x].adj)
-                    {
-                        if (adj.weight == weight && adj.v->name == v1)
-                        {
-                            alreadyInSecond = true;
-                        }
-                    }
-                    if (alreadyInFirst && alreadyInSecond)
-                    {
-                        // this exact edge already exists
-                        return;
-                    }
-
+                {
                     // add second vertex as adj to first vertex
                     adjVertex vert;
                     vert.v = &vertices[x];
                     vert.weight = weight;
                     vertices[i].adj.push_back(vert);
-
-                    // add first vertex as adj to second vertex
-                    adjVertex vertReverse;
-                    vertReverse.v = &vertices[i];
-                    vertReverse.weight = weight;
-                    vertices[x].adj.push_back(vertReverse);
                 }
             }
         }
@@ -84,6 +56,7 @@ void Graph::displayEdges()
 {
     for (vertex v : vertices)
     {
+        cout << v.name << " (" << v.adj.size() << " routes)" << endl;
         for (adjVertex adj : v.adj)
         {
             cout << "  " << adj.v->name << " (" << adj.weight << ")" << endl;
