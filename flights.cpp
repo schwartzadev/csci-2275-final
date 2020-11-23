@@ -14,10 +14,10 @@ void die(string message)
 
 void generate_graph(Graph *g, std::string filename)
 {
-    ifstream file(filename);
+    ifstream fileVertices(filename);
 
     // non-existant or corrupted file
-    if (file.fail())
+    if (fileVertices.fail())
     {
         die("Check if file exists!");
     }
@@ -25,7 +25,7 @@ void generate_graph(Graph *g, std::string filename)
     float weight;
     string fromAirport, destinationAirport, line, word;
 
-    while (std::getline(file, line))
+    while (std::getline(fileVertices, line))
     {
         stringstream lineStream(line);
 
@@ -41,15 +41,28 @@ void generate_graph(Graph *g, std::string filename)
 
         g->addVertex(fromAirport);        // won't add if already exists
         g->addVertex(destinationAirport); // won't add if already exists
+    }
 
-        // add one directional edge
+    ifstream fileEdges(filename);
+    while (std::getline(fileEdges, line))
+    {
+        stringstream lineStream(line);
+        std::getline(lineStream, word, ',');
+        fromAirport = word;
+
+        std::getline(lineStream, word, ',');
+        destinationAirport = word;
+
+        std::getline(lineStream, word, ',');
+        weight = atof(word.c_str());
+
+        // add one-directional edge
         g->addEdge(fromAirport, destinationAirport, weight);
     }
 }
 
 int main(int argc, const char *argv[])
 {
-    Graph g;
     string menuStr = "======Main Menu======\n"
                      "1. Print vertices\n"
                      "5. Quit\n";
@@ -63,6 +76,9 @@ int main(int argc, const char *argv[])
     bool done = false;
 
     string filename(argv[1]);
+
+    Graph g = Graph();
+
     generate_graph(&g, filename);
 
     do
