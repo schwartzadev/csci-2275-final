@@ -95,7 +95,11 @@ int getWeightToParent(vertex *v)
 void Graph::showCheapestRoutes(string from)
 {
     cout << "cheapest routes from " << from << endl;
-    dijkstra(from);
+    vector<vertex> routes = dijkstra(from);
+    for (vertex v : routes) {
+        // todo print full route, not just name
+        cout << "  " << v.name << " (" << v.distance << ") " << endl;
+    }
     // todo sort results low to high (priority queue?)
 }
 
@@ -129,7 +133,7 @@ bool Graph::allVisitedCheck()
     return true;
 }
 
-void Graph::dijkstra(string src)
+vector<vertex> Graph::dijkstra(string src)
 {
     vertex *root = findVertex(src);
     root->distance = 0; // this is the starting node
@@ -154,13 +158,12 @@ void Graph::dijkstra(string src)
 
     // todo return a vector of vertex pointers
 
+    vector<vertex> results;
+
     for (vertex *v : vertices)
     {
         if (v->distance > 0)
-        {
-            // todo print full route, not just name
-            cout << v->name << " (" << v->distance << ") " << endl;
-        }
+            results.push_back(*v);
     }
 
     for (vertex *v : vertices)
@@ -170,5 +173,7 @@ void Graph::dijkstra(string src)
         // reset distance to intmax
         v->distance = INT_MAX;
     }
+
+    return results;
 }
 // END OF DIJKSTRAS

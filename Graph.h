@@ -37,7 +37,7 @@ public:
     void showCheapestRoutes(std::string from);
     std::vector<vertex *> vertices; // todo make private
 private:
-    void dijkstra(std::string from);
+    std::vector<vertex> dijkstra(std::string from);
     void pathBack();
     vertex *getMinNode();
     bool allVisitedCheck();
