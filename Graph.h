@@ -19,6 +19,10 @@ struct vertex
     bool visited = false;
     int distance;
     std::vector<adjVertex> adj;
+    vertex(std::string inName)
+    {
+        name = inName;
+    };
 };
 
 class Graph
@@ -30,7 +34,7 @@ public:
     void addVertex(std::string name);
     int isAdjacent(std::string v1, std::string v2);
     void displayEdges();
-    std::vector<vertex> vertices; // todo make private
+    std::vector<vertex *> vertices; // todo make private
 private:
     void unVisit();
     vertex *findVertex(std::string name);

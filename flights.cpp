@@ -24,7 +24,6 @@ void generate_graph(Graph *g, std::string filename)
 
     float weight;
     string fromAirport, destinationAirport, line, word;
-
     while (std::getline(fileVertices, line))
     {
         stringstream lineStream(line);
@@ -65,6 +64,7 @@ int main(int argc, const char *argv[])
 {
     string menuStr = "======Main Menu======\n"
                      "1. Print vertices\n"
+                     "2. Cheapest flights from...\n"
                      "5. Quit\n";
 
     if (argc < 2)
@@ -95,6 +95,14 @@ int main(int argc, const char *argv[])
         case 1:
         {
             g.displayEdges();
+            break;
+        }
+        case 2:
+        {
+            cout << "Enter the starting airport code: ";
+            string from;
+            getline(cin, from);
+            // g.showCheapestRoutes(from);
             break;
         }
         default:

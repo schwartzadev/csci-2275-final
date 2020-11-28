@@ -5,8 +5,8 @@ using namespace std;
 
 void Graph::unVisit()
 {
-    for (vertex v : vertices)
-        v.visited = false;
+    for (vertex *v : vertices)
+        v->visited = false;
 }
 
 void Graph::addEdge(string v1, string v2, int weight)
@@ -14,18 +14,18 @@ void Graph::addEdge(string v1, string v2, int weight)
     for (int i = 0; i < vertices.size(); i++)
     {
         // find the first vertex
-        if (vertices[i].name == v1)
+        if (vertices[i]->name == v1)
         {
             for (int x = 0; x < vertices.size(); x++)
             {
                 // find the second vertex
-                if (vertices[x].name == v2 && i != x)
+                if (vertices[x]->name == v2 && i != x)
                 {
                     // add second vertex as adj to first vertex
                     adjVertex vert;
-                    vert.v = &vertices[x];
+                    vert.v = vertices[x];
                     vert.weight = weight;
-                    vertices[i].adj.push_back(vert);
+                    vertices[i]->adj.push_back(vert);
                 }
             }
         }
@@ -37,27 +37,27 @@ void Graph::addVertex(string name)
     bool inGraph = false;
 
     // check if already in the graph
-    for (vertex v : vertices)
+    for (vertex *v : vertices)
     {
-        if (v.name == name)
+        if (v->name == name)
             inGraph = true;
     }
 
     // if not, add to vertices
     if (!inGraph)
     {
-        vertex v;
+        vertex v = vertex(name);
         v.name = name;
-        vertices.push_back(v);
+        vertices.push_back(&v);
     }
 }
 
 void Graph::displayEdges()
 {
-    for (vertex v : vertices)
+    for (vertex *v : vertices)
     {
-        cout << v.name << " (" << v.adj.size() << " routes)" << endl;
-        for (adjVertex adj : v.adj)
+        cout << v->name << " (" << v->adj.size() << " routes)" << endl;
+        for (adjVertex adj : v->adj)
         {
             cout << "  " << adj.v->name << " (" << adj.weight << ")" << endl;
         }
@@ -69,8 +69,8 @@ vertex *Graph::findVertex(string name)
 {
     for (int i = 0; i < vertices.size(); ++i)
     {
-        if (vertices[i].name == name)
-            return &vertices[i];
+        if (vertices[i]->name == name)
+            return vertices[i];
     }
     return NULL;
 }
