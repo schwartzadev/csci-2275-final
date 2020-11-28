@@ -18,7 +18,7 @@ struct vertex
     vertex *parent;
     bool visited = false;
     int distance;
-    std::vector<adjVertex> adj;
+    std::vector<adjVertex*> adj;
     vertex(std::string inName)
     {
         name = inName;
@@ -34,8 +34,13 @@ public:
     void addVertex(std::string name);
     int isAdjacent(std::string v1, std::string v2);
     void displayEdges();
+    void showCheapestRoutes(std::string from);
     std::vector<vertex *> vertices; // todo make private
 private:
+    void dijkstra(std::string from);
+    void pathBack();
+    vertex *getMinNode();
+    bool allVisitedCheck();
     void unVisit();
     vertex *findVertex(std::string name);
 };

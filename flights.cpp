@@ -102,7 +102,7 @@ int main(int argc, const char *argv[])
             cout << "Enter the starting airport code: ";
             string from;
             getline(cin, from);
-            // g.showCheapestRoutes(from);
+            g.showCheapestRoutes(from);
             break;
         }
         default:
