@@ -35,6 +35,7 @@ public:
     int isAdjacent(std::string v1, std::string v2);
     void displayEdges();
     void showCheapestRoutes(std::string from);
+    void showNonstopRoutes(std::string from);
     std::vector<vertex *> vertices; // todo make private
 private:
     std::vector<vertex> dijkstra(std::string from);

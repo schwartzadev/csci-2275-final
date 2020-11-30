@@ -92,6 +92,14 @@ int getWeightToParent(vertex *v)
     return -1;
 }
 
+void Graph::showNonstopRoutes(string from) {
+    vertex * fromVertex = findVertex(from);
+    cout << "Nonstop routes from " << from << ":" << endl;
+    for (adjVertex * adj : fromVertex->adj ) {
+        cout << "  " << fromVertex->name << " -> " << adj->v->name << " ($" << adj->weight << ")" << endl;
+    }
+}
+
 void Graph::showCheapestRoutes(string from)
 {
     cout << "cheapest routes from " << from << endl;

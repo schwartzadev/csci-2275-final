@@ -65,6 +65,7 @@ int main(int argc, const char *argv[])
     string menuStr = "======Main Menu======\n"
                      "1. Print vertices\n"
                      "2. Cheapest flights from...\n"
+                     "3. Nonstop flights from...\n"
                      "5. Quit\n";
 
     if (argc < 2)
@@ -103,6 +104,14 @@ int main(int argc, const char *argv[])
             string from;
             getline(cin, from);
             g.showCheapestRoutes(from);
+            break;
+        }
+        case 3:
+        {
+            cout << "Enter the starting airport code: ";
+            string from;
+            getline(cin, from);
+            g.showNonstopRoutes(from);
             break;
         }
         default:
