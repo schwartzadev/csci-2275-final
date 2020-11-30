@@ -2,6 +2,7 @@
 #include "limits.h"
 #include <stack>
 
+
 using namespace std;
 
 void Graph::unVisit()
@@ -94,9 +95,20 @@ int getWeightToParent(vertex *v)
 
 void Graph::showNonstopRoutes(string from) {
     vertex * fromVertex = findVertex(from);
+
+    priority_queue<adjVertex*, vector<adjVertex*>, adjVertexComparator> pQueue;
+
+    for (adjVertex * adj : fromVertex->adj )
+        pQueue.push(adj);
+
+
     cout << "Nonstop routes from " << from << ":" << endl;
-    for (adjVertex * adj : fromVertex->adj ) {
-        cout << "  " << fromVertex->name << " -> " << adj->v->name << " ($" << adj->weight << ")" << endl;
+    
+    // pop all items
+    while (!pQueue.empty())
+    {
+        cout << "  " << fromVertex->name << " -> " << pQueue.top()->v->name << " ($" << pQueue.top()->weight << ")" << endl;
+        pQueue.pop();
     }
 }
 

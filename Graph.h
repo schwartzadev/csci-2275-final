@@ -12,6 +12,15 @@ struct adjVertex
     int weight;
 };
 
+class adjVertexComparator
+{
+public:
+    int operator()(const adjVertex * adj1, const adjVertex * adj2)
+    {
+        return adj1->weight > adj2->weight;
+    }
+};
+
 struct vertex
 {
     std::string name;
