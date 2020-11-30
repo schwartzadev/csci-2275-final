@@ -2,7 +2,6 @@
 #include "limits.h"
 #include <stack>
 
-
 using namespace std;
 
 void Graph::unVisit()
@@ -93,17 +92,17 @@ int getWeightToParent(vertex *v)
     return -1;
 }
 
-void Graph::showNonstopRoutes(string from) {
-    vertex * fromVertex = findVertex(from);
+void Graph::showNonstopRoutes(string from)
+{
+    vertex *fromVertex = findVertex(from);
 
-    priority_queue<adjVertex*, vector<adjVertex*>, adjVertexComparator> pQueue;
+    priority_queue<adjVertex *, vector<adjVertex *>, adjVertexComparator> pQueue;
 
-    for (adjVertex * adj : fromVertex->adj )
+    for (adjVertex *adj : fromVertex->adj)
         pQueue.push(adj);
 
-
     cout << "Nonstop routes from " << from << ":" << endl;
-    
+
     // pop all items
     while (!pQueue.empty())
     {
@@ -112,15 +111,15 @@ void Graph::showNonstopRoutes(string from) {
     }
 }
 
-void Graph::showCheapestRoutes(string from)
+void Graph::showCheapestRoute(string from, string to)
 {
-    cout << "cheapest routes from " << from << endl;
-    vector<vertex> routes = dijkstra(from);
-    for (vertex v : routes) {
-        // todo print full route, not just name
-        cout << "  " << v.name << " (" << v.distance << ") " << endl;
-    }
-    // todo sort results low to high (priority queue?)
+    cout << "cheapest route from " << from << " to " << to << ": ";
+    vertex *v = dijkstra(from, to);
+    cout << "$" << v->distance << endl;
+
+    // reset v
+    v->visited = false;
+    v->distance = INT_MAX;
 }
 
 // START OF DIJKSTRAS
@@ -153,20 +152,51 @@ bool Graph::allVisitedCheck()
     return true;
 }
 
-vector<vertex> Graph::dijkstra(string src)
+vertex *Graph::dijkstra(string start, string end)
 {
-    vertex *root = findVertex(src);
+    /**
+     * returns the vertex for the starting airport
+     * 
+     * the cheapest routes can then be accessed with
+     * the starting airport's adjacency list
+    **/
+    vertex *root = findVertex(start);
+    vertex *final = findVertex(end);
     root->distance = 0; // this is the starting node
 
-    while (!allVisitedCheck())
+    // make a PQ
+    // distance as the priority variable
+    priority_queue<vertex *, vector<vertex *>, vertexComparator> pQueue;
+
+    pQueue.push(root);
+
+    while (!final->visited)
     {
-        vertex *minUnvisited = getMinNode();
-        minUnvisited->visited = true;
+        // get the node that has the lowest distance value
+        vertex *current = pQueue.top();
+
+        // once we pop the destination, we're done
+        if (current->name == end) {
+            break;
+        }
+
+        // pop from the queue
+        pQueue.pop();
+
+        current->visited = true;
+
+        // look at adjacent nodes
+        // if i have not yet visited those adjacent nodes, add them to the PQ
+        for (adjVertex *adj : current->adj)
+        {
+            if (!adj->v->visited)
+                pQueue.push(adj->v);
+        }
 
         // set the distances for the neighbors of the root node
-        for (adjVertex *a : minUnvisited->adj)
+        for (adjVertex *a : current->adj)
         {
-            int newCumeDistance = minUnvisited->distance + a->weight;
+            int newCumeDistance = current->distance + a->weight;
             if (a->v->distance > newCumeDistance)
             {
                 // compare the current distance to the new distance
@@ -176,24 +206,17 @@ vector<vertex> Graph::dijkstra(string src)
         }
     }
 
-    // todo return a vector of vertex pointers
-
-    vector<vertex> results;
-
     for (vertex *v : vertices)
     {
-        if (v->distance > 0)
-            results.push_back(*v);
+        if (v->name != final->name)
+        {
+            // unvisit
+            v->visited = false;
+            // reset distance to intmax
+            v->distance = INT_MAX;
+        }
     }
 
-    for (vertex *v : vertices)
-    {
-        // unvisit
-        v->visited = false;
-        // reset distance to intmax
-        v->distance = INT_MAX;
-    }
-
-    return results;
+    return final;
 }
 // END OF DIJKSTRAS

@@ -64,7 +64,7 @@ int main(int argc, const char *argv[])
 {
     string menuStr = "======Main Menu======\n"
                      "1. Print vertices\n"
-                     "2. Cheapest flights from...\n"
+                     "2. Cheapest route from A to B...\n"
                      "3. Nonstop flights from...\n"
                      "5. Quit\n";
 
@@ -100,15 +100,17 @@ int main(int argc, const char *argv[])
         }
         case 2:
         {
-            cout << "Enter the starting airport code: ";
-            string from;
+            cout << "Enter the departing airport code: ";
+            string from, to;
             getline(cin, from);
-            g.showCheapestRoutes(from);
+            cout << "Enter the arriving airport code: ";
+            getline(cin, to);
+            g.showCheapestRoute(from, to);
             break;
         }
         case 3:
         {
-            cout << "Enter the starting airport code: ";
+            cout << "Enter the departing airport code: ";
             string from;
             getline(cin, from);
             g.showNonstopRoutes(from);

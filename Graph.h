@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <queue>
+#include <limits.h>
 
 struct vertex;
 
@@ -26,12 +27,22 @@ struct vertex
     std::string name;
     vertex *parent;
     bool visited = false;
-    int distance;
+    int distance = INT_MAX;
     std::vector<adjVertex*> adj;
+    vertex() {};
     vertex(std::string inName)
     {
         name = inName;
     };
+};
+
+class vertexComparator
+{
+public:
+    int operator()(const vertex *v1, const vertex *v2)
+    {
+        return v1->distance > v2->distance;
+    }
 };
 
 class Graph
@@ -43,11 +54,11 @@ public:
     void addVertex(std::string name);
     int isAdjacent(std::string v1, std::string v2);
     void displayEdges();
-    void showCheapestRoutes(std::string from);
+    void showCheapestRoute(std::string from, std::string to);
     void showNonstopRoutes(std::string from);
     std::vector<vertex *> vertices; // todo make private
 private:
-    std::vector<vertex> dijkstra(std::string from);
+    vertex * dijkstra(std::string from, std::string to);
     void pathBack();
     vertex *getMinNode();
     bool allVisitedCheck();
