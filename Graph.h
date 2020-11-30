@@ -25,7 +25,7 @@ public:
 struct vertex
 {
     std::string name;
-    vertex *parent;
+    vertex *parent = nullptr;
     bool visited = false;
     int distance = INT_MAX;
     std::vector<adjVertex*> adj;
@@ -56,6 +56,7 @@ public:
     void displayEdges();
     void showCheapestRoute(std::string from, std::string to);
     void showNonstopRoutes(std::string from);
+    void unvisitAll();
     std::vector<vertex *> vertices; // todo make private
 private:
     vertex * dijkstra(std::string from, std::string to);

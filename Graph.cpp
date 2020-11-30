@@ -113,13 +113,20 @@ void Graph::showNonstopRoutes(string from)
 
 void Graph::showCheapestRoute(string from, string to)
 {
-    cout << "cheapest route from " << from << " to " << to << ": ";
+    cout << "cheapest route:" << endl;
     vertex *v = dijkstra(from, to);
-    cout << "$" << v->distance << endl;
 
-    // reset v
-    v->visited = false;
-    v->distance = INT_MAX;
+    vertex * traverse = v;
+    cout << "  " << from << " -> ";
+    string latestParent = ""; // prevent repeats
+    while (traverse->parent != nullptr && traverse->parent->name != latestParent)
+    {
+        cout << traverse->parent->name << " -> ";
+        latestParent = traverse->parent->name;
+    }
+    cout << to << " ($" << v->distance << ")" << endl;
+
+    unvisitAll();
 }
 
 // START OF DIJKSTRAS
@@ -161,7 +168,7 @@ vertex *Graph::dijkstra(string start, string end)
      * the starting airport's adjacency list
     **/
     vertex *root = findVertex(start);
-    vertex *final = findVertex(end);
+    vertex *destination = findVertex(end);
     root->distance = 0; // this is the starting node
 
     // make a PQ
@@ -170,13 +177,14 @@ vertex *Graph::dijkstra(string start, string end)
 
     pQueue.push(root);
 
-    while (!final->visited)
+    while (!destination->visited) // size constraint stops loops
     {
         // get the node that has the lowest distance value
         vertex *current = pQueue.top();
 
         // once we pop the destination, we're done
-        if (current->name == end) {
+        if (current->name == end)
+        {
             break;
         }
 
@@ -185,38 +193,37 @@ vertex *Graph::dijkstra(string start, string end)
 
         current->visited = true;
 
-        // look at adjacent nodes
-        // if i have not yet visited those adjacent nodes, add them to the PQ
-        for (adjVertex *adj : current->adj)
-        {
-            if (!adj->v->visited)
-                pQueue.push(adj->v);
-        }
-
         // set the distances for the neighbors of the root node
         for (adjVertex *a : current->adj)
         {
-            int newCumeDistance = current->distance + a->weight;
-            if (a->v->distance > newCumeDistance)
+            if (!a->v->visited)
             {
-                // compare the current distance to the new distance
-                // update the distance if it's shorter
-                a->v->distance = newCumeDistance;
+                // haven't seen v yet
+                int newCumeDistance = current->distance + a->weight;
+                if (a->v->distance > newCumeDistance)
+                {
+                    // compare the current distance to the new distance
+                    // update the distance if it's shorter
+                    a->v->distance = newCumeDistance;
+                    a->v->parent = current;
+                    pQueue.push(a->v);
+                }
             }
         }
     }
+    return destination;
+}
 
+void Graph::unvisitAll()
+{
     for (vertex *v : vertices)
     {
-        if (v->name != final->name)
-        {
-            // unvisit
-            v->visited = false;
-            // reset distance to intmax
-            v->distance = INT_MAX;
-        }
+        // unvisit
+        v->visited = false;
+        // reset distance to intmax
+        v->distance = INT_MAX;
+        // reset parent
+        v->parent = nullptr;
     }
-
-    return final;
 }
 // END OF DIJKSTRAS
