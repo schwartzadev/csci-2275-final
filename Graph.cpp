@@ -113,12 +113,21 @@ void Graph::showNonstopRoutes(string from)
 
 void Graph::showCheapestRoute(string from, string to)
 {
-    cout << "cheapest route:" << endl;
     vertex *v = dijkstra(from, to);
 
+    // no route was found, nodes are not connected
+    if (!v->visited)
+    {
+        cout << "  No route found!" << endl;
+        return;
+    }
+    
+
+    // log route to the console
+    cout << "cheapest route:" << endl;
     vertex * traverse = v;
     cout << "  " << from << " -> ";
-    string latestParent = ""; // prevent repeats
+    string latestParent = from; // prevent repeats
     while (traverse->parent != nullptr && traverse->parent->name != latestParent)
     {
         cout << traverse->parent->name << " -> ";
@@ -177,21 +186,20 @@ vertex *Graph::dijkstra(string start, string end)
 
     pQueue.push(root);
 
-    while (!destination->visited) // size constraint stops loops
+    while (!destination->visited && !pQueue.empty())
     {
         // get the node that has the lowest distance value
         vertex *current = pQueue.top();
 
+        current->visited = true;
+
         // once we pop the destination, we're done
         if (current->name == end)
-        {
             break;
-        }
 
         // pop from the queue
         pQueue.pop();
 
-        current->visited = true;
 
         // set the distances for the neighbors of the root node
         for (adjVertex *a : current->adj)
@@ -211,6 +219,7 @@ vertex *Graph::dijkstra(string start, string end)
             }
         }
     }
+
     return destination;
 }
 
