@@ -52,15 +52,13 @@ public:
     ~Graph(){};
     void addEdge(std::string v1, std::string v2, int weight);
     void addVertex(std::string name);
-    int isAdjacent(std::string v1, std::string v2);
-    void displayEdges();
     void showCheapestRoute(std::string from, std::string to);
     void showNonstopRoutes(std::string from);
-    void resetAll();
-    std::vector<vertex *> vertices; // todo make private
+    void displayEdges();
 private:
+    void resetAll();
+    std::vector<vertex *> vertices;
     vertex * dijkstra(std::string from, std::string to);
-    void pathBack();
     vertex * getMinNode();
     bool allVisitedCheck();
     void unVisit();
