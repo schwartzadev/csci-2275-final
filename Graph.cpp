@@ -6,12 +6,20 @@ using namespace std;
 
 void Graph::unVisit()
 {
+    /// Unvisits all of the vertices in the graph
     for (vertex *v : vertices)
         v->visited = false;
 }
 
 void Graph::addEdge(string v1, string v2, int weight)
 {
+    /**
+     * Adds an directional edge to the graph
+     * 
+     * @param v1 the starting node of the edge
+     * @param v2 the ending node of the edge
+     * @param weight the weight of the edge
+     */
     for (int i = 0; i < vertices.size(); i++)
     {
         // find the first vertex
@@ -35,25 +43,28 @@ void Graph::addEdge(string v1, string v2, int weight)
 
 void Graph::addVertex(string name)
 {
+    /**
+     * Adds a vertex to the graph if it doesn't already exist
+     * 
+     * @param name the name of the vertex to be added
+     */
     bool inGraph = false;
 
     // check if already in the graph
     for (vertex *v : vertices)
     {
         if (v->name == name)
-            inGraph = true;
+            return; // exit
     }
 
     // if not, add to vertices
-    if (!inGraph)
-    {
-        vertex *v = new vertex(name);
-        vertices.push_back(v);
-    }
+    vertex *v = new vertex(name);
+    vertices.push_back(v);
 }
 
 void Graph::displayEdges()
 {
+    /// Displays all of the edges in the graph
     for (vertex *v : vertices)
     {
         if (v->adj.size() > 0)
@@ -66,8 +77,14 @@ void Graph::displayEdges()
     return;
 }
 
-vertex *Graph::findVertex(string name)
+vertex* Graph::findVertex(string name)
 {
+    /**
+     * Finds a vertex in the graph based on its name
+     * 
+     * @param name the name of the vertex to be found
+     * @return a pointer to the vertex if it exists, NULL if it doesn't
+     */
     for (int i = 0; i < vertices.size(); ++i)
     {
         if (vertices[i]->name == name)
@@ -76,24 +93,13 @@ vertex *Graph::findVertex(string name)
     return NULL;
 }
 
-int getWeightToParent(vertex *v)
-{
-    /*
-    returns the weight of the edge connecting a vertex v to its parent
-    */
-    string parentName = v->parent->name;
-    for (adjVertex *adjacent : v->adj)
-    {
-        if (adjacent->v->name == parentName)
-        {
-            return adjacent->weight;
-        }
-    }
-    return -1;
-}
-
 void Graph::showNonstopRoutes(string from)
 {
+    /**
+     * Displays all of the nonstop routes from a given vertex, sorted by price low to high.
+     * 
+     * @param from the name of the starting vertex
+     */ 
     vertex *fromVertex = findVertex(from);
 
     priority_queue<adjVertex *, vector<adjVertex *>, adjVertexComparator> pQueue;
@@ -113,6 +119,12 @@ void Graph::showNonstopRoutes(string from)
 
 void Graph::showCheapestRoute(string from, string to)
 {
+    /**
+     * Shows the cheapest route between two vertices.
+     * 
+     * @param from the starting vertex in the route
+     * @param from the destination vertex in the route
+     */
     vertex *v = dijkstra(from, to);
 
     // no route was found, nodes are not connected
@@ -121,11 +133,10 @@ void Graph::showCheapestRoute(string from, string to)
         cout << "  No route found!" << endl;
         return;
     }
-    
 
     // log route to the console
-    cout << "cheapest route:" << endl;
-    vertex * traverse = v;
+    cout << "Cheapest route:" << endl;
+    vertex *traverse = v;
     cout << "  " << from << " -> ";
     string latestParent = from; // prevent repeats
     while (traverse->parent != nullptr && traverse->parent->name != latestParent)
@@ -135,14 +146,17 @@ void Graph::showCheapestRoute(string from, string to)
     }
     cout << to << " ($" << v->distance << ")" << endl;
 
-    unvisitAll();
+    resetAll();
 }
 
-// START OF DIJKSTRAS
-
-vertex *Graph::getMinNode()
+vertex* Graph::getMinNode()
 {
-    // return the node with the lowest distance that has not yet been visited
+    /**
+     * Returns the node with the smallest distance that has not yet been visited.
+     * Helper function for Djikstra's algorithm.
+     * 
+     * @return a pointer to the vertex with the smallest distance that is also unvisited
+     */
     int min = INT_MAX;
     vertex *minNode;
 
@@ -159,7 +173,11 @@ vertex *Graph::getMinNode()
 
 bool Graph::allVisitedCheck()
 {
-    // return true if all nodes have been visited
+    /**
+     * Checks if all vertices are visited
+     * 
+     * @return true if all vertices have been visited, else false
+     */
     for (vertex *v : vertices)
     {
         if (!v->visited) // if a node has not been visited
@@ -168,13 +186,16 @@ bool Graph::allVisitedCheck()
     return true;
 }
 
-vertex *Graph::dijkstra(string start, string end)
+vertex* Graph::dijkstra(string start, string end)
 {
     /**
-     * returns the vertex for the starting airport
+     * Returns the vertex for the starting airport.
+     * The cheapest routes can then be accessed with the starting airport's adjacency list.
      * 
-     * the cheapest routes can then be accessed with
-     * the starting airport's adjacency list
+     * @param start the starting vertex in the route
+     * @param end the ending vertex in the route
+     * @return a pointer to the ending vertex
+     * 
     **/
     vertex *root = findVertex(start);
     vertex *destination = findVertex(end);
@@ -200,7 +221,6 @@ vertex *Graph::dijkstra(string start, string end)
         // pop from the queue
         pQueue.pop();
 
-
         // set the distances for the neighbors of the root node
         for (adjVertex *a : current->adj)
         {
@@ -219,20 +239,16 @@ vertex *Graph::dijkstra(string start, string end)
             }
         }
     }
-
     return destination;
 }
 
-void Graph::unvisitAll()
+void Graph::resetAll()
 {
+    /// Resets all vertices in the graph
     for (vertex *v : vertices)
     {
-        // unvisit
-        v->visited = false;
-        // reset distance to intmax
-        v->distance = INT_MAX;
-        // reset parent
-        v->parent = nullptr;
+        v->visited = false; // unvisit
+        v->distance = INT_MAX; // reset distance to intmax
+        v->parent = nullptr; // reset parent
     }
 }
-// END OF DIJKSTRAS

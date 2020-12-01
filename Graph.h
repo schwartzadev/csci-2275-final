@@ -56,15 +56,15 @@ public:
     void displayEdges();
     void showCheapestRoute(std::string from, std::string to);
     void showNonstopRoutes(std::string from);
-    void unvisitAll();
+    void resetAll();
     std::vector<vertex *> vertices; // todo make private
 private:
     vertex * dijkstra(std::string from, std::string to);
     void pathBack();
-    vertex *getMinNode();
+    vertex * getMinNode();
     bool allVisitedCheck();
     void unVisit();
-    vertex *findVertex(std::string name);
+    vertex * findVertex(std::string name);
 };
 
 #endif // GRAPH_H
