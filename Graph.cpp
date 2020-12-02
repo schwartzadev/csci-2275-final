@@ -41,7 +41,7 @@ void Graph::addEdge(string v1, string v2, int weight)
     }
 }
 
-void Graph::addVertex(string name)
+void Graph::addAirport(string name)
 {
     /**
      * Adds an airport to the graph if it doesn't already exist

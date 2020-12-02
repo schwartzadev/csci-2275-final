@@ -20,19 +20,21 @@ void generate_graph(Graph *g, std::string filename)
      * @param g a pointer to the graph to be generated
      * @param filename a string equal to the filename of the input file
      */
-    ifstream fileVertices(filename);
+    ifstream fileAirports(filename);
 
     // non-existant or corrupted file
-    if (fileVertices.fail())
+    if (fileAirports.fail())
     {
         die("Check if file exists!");
     }
 
-    float weight;
+    float weight; // the edge weight
     string fromAirport, destinationAirport, line, word;
-    while (std::getline(fileVertices, line))
+
+    // first pass through the file, add airports
+    while (std::getline(fileAirports, line))
     {
-        stringstream lineStream(line);
+        stringstream lineStream(line); // get the line
 
         // parse the csv row
         std::getline(lineStream, word, ',');
@@ -44,11 +46,13 @@ void generate_graph(Graph *g, std::string filename)
         std::getline(lineStream, word, ',');
         weight = atof(word.c_str());
 
-        g->addVertex(fromAirport);        // won't add if already exists
-        g->addVertex(destinationAirport); // won't add if already exists
+        // add vertices to graph
+        g->addAirport(fromAirport);        // won't add if already exists
+        g->addAirport(destinationAirport); // won't add if already exists
     }
 
     ifstream fileEdges(filename);
+    // second pass through the file, add edges
     while (std::getline(fileEdges, line))
     {
         stringstream lineStream(line);
