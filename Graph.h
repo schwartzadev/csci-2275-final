@@ -5,11 +5,11 @@
 #include <queue>
 #include <limits.h>
 
-struct vertex;
+struct airport;
 
 struct adjVertex
 {
-    vertex *v;
+    airport *v;
     int weight;
 };
 
@@ -22,24 +22,25 @@ public:
     }
 };
 
-struct vertex
+// todo refactor to airport
+struct airport
 {
     std::string name;
-    vertex *parent = nullptr;
+    airport *parent = nullptr;
     bool visited = false;
     int distance = INT_MAX;
     std::vector<adjVertex*> adj;
-    vertex() {};
-    vertex(std::string inName)
+    airport() {};
+    airport(std::string inName)
     {
         name = inName;
     };
 };
 
-class vertexComparator
+class airportComparator
 {
 public:
-    int operator()(const vertex *v1, const vertex *v2)
+    int operator()(const airport *v1, const airport *v2)
     {
         return v1->distance > v2->distance;
     }
@@ -57,12 +58,12 @@ public:
     void displayEdges();
 private:
     void resetAll();
-    std::vector<vertex *> vertices;
-    vertex * dijkstra(std::string from, std::string to);
-    vertex * getMinNode();
+    std::vector<airport *> airports;
+    airport * dijkstra(std::string from, std::string to);
+    airport * getMinNode();
     bool allVisitedCheck();
     void unVisit();
-    vertex * findVertex(std::string name);
+    airport * findAirport(std::string name);
 };
 
 #endif // GRAPH_H

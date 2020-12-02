@@ -69,7 +69,7 @@ void generate_graph(Graph *g, std::string filename)
 int main(int argc, const char *argv[])
 {
     string menuStr = "======Main Menu======\n"
-                     "1. Print vertices\n"
+                     "1. Print airports\n"
                      "2. Cheapest route from A to B...\n"
                      "3. Nonstop flights from...\n"
                      "5. Quit\n";
