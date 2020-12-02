@@ -1,74 +1,7 @@
 #include <iostream>
-#include <fstream>
-#include <sstream>
-#include <vector>
 #include "Graph.h"
 
 using namespace std;
-
-void die(string message)
-{
-    cout << message << endl;
-    exit(0);
-}
-
-void generate_graph(Graph *g, std::string filename)
-{
-    /**
-     * Generates nodes and edges for a graph, based on an input file.
-     * 
-     * @param g a pointer to the graph to be generated
-     * @param filename a string equal to the filename of the input file
-     */
-    ifstream fileAirports(filename);
-
-    // non-existant or corrupted file
-    if (fileAirports.fail())
-    {
-        die("Check if file exists!");
-    }
-
-    float weight; // the edge weight
-    string fromAirport, destinationAirport, line, word;
-
-    // first pass through the file, add airports
-    while (std::getline(fileAirports, line))
-    {
-        stringstream lineStream(line); // get the line
-
-        // parse the csv row
-        std::getline(lineStream, word, ',');
-        fromAirport = word;
-
-        std::getline(lineStream, word, ',');
-        destinationAirport = word;
-
-        std::getline(lineStream, word, ',');
-        weight = atof(word.c_str());
-
-        // add vertices to graph
-        g->addAirport(fromAirport);        // won't add if already exists
-        g->addAirport(destinationAirport); // won't add if already exists
-    }
-
-    ifstream fileEdges(filename);
-    // second pass through the file, add edges
-    while (std::getline(fileEdges, line))
-    {
-        stringstream lineStream(line);
-        std::getline(lineStream, word, ',');
-        fromAirport = word;
-
-        std::getline(lineStream, word, ',');
-        destinationAirport = word;
-
-        std::getline(lineStream, word, ',');
-        weight = atof(word.c_str());
-
-        // add one-directional edge
-        g->addEdge(fromAirport, destinationAirport, weight);
-    }
-}
 
 int main(int argc, const char *argv[])
 {
@@ -80,7 +13,8 @@ int main(int argc, const char *argv[])
 
     if (argc < 2)
     {
-        die("Missing flights data!");
+        cout << "Missing flights data!" << endl;
+        exit(1);
     }
 
     int choice = 0;
@@ -88,9 +22,7 @@ int main(int argc, const char *argv[])
 
     string filename(argv[1]);
 
-    Graph g = Graph();
-
-    generate_graph(&g, filename);
+    Graph g = Graph(filename);
 
     do
     {

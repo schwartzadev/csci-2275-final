@@ -51,12 +51,16 @@ class Graph
 public:
     Graph(){};
     ~Graph(){};
+    Graph(std::string filename) {
+        generate(filename);
+    };
     void addEdge(std::string v1, std::string v2, int weight);
     void addAirport(std::string name);
     void showCheapestRoute(std::string from, std::string to);
     void showNonstopRoutes(std::string from);
     void displayEdges();
 private:
+    void generate(std::string filename);
     void resetAll();
     std::vector<airport *> airports;
     airport * dijkstra(std::string from, std::string to);

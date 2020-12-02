@@ -1,8 +1,69 @@
 #include "Graph.h"
 #include "limits.h"
 #include <stack>
+#include <fstream>
+#include <sstream>
+#include <vector>
 
 using namespace std;
+
+void Graph::generate(string filename)
+{
+    /**
+     * Generates nodes and edges for the graph, based on an input file.
+     * 
+     * @param filename a string equal to the filename of the input file
+     */
+    ifstream fileAirports(filename);
+
+    // non-existant or corrupted file
+    if (fileAirports.fail())
+    {
+        cout << "Check if file exists!" << endl;
+        exit(1);
+    }
+
+    float weight; // the edge weight
+    string fromAirport, destinationAirport, line, word;
+
+    // first pass through the file, add airports
+    while (std::getline(fileAirports, line))
+    {
+        stringstream lineStream(line); // get the line
+
+        // parse the csv row
+        std::getline(lineStream, word, ',');
+        fromAirport = word;
+
+        std::getline(lineStream, word, ',');
+        destinationAirport = word;
+
+        std::getline(lineStream, word, ',');
+        weight = atof(word.c_str());
+
+        // add vertices to graph
+        addAirport(fromAirport);        // won't add if already exists
+        addAirport(destinationAirport); // won't add if already exists
+    }
+
+    ifstream fileEdges(filename);
+    // second pass through the file, add edges
+    while (std::getline(fileEdges, line))
+    {
+        stringstream lineStream(line);
+        std::getline(lineStream, word, ',');
+        fromAirport = word;
+
+        std::getline(lineStream, word, ',');
+        destinationAirport = word;
+
+        std::getline(lineStream, word, ',');
+        weight = atof(word.c_str());
+
+        // add one-directional edge
+        addEdge(fromAirport, destinationAirport, weight);
+    }
+}
 
 void Graph::unVisit()
 {
@@ -77,7 +138,7 @@ void Graph::displayEdges()
     return;
 }
 
-airport* Graph::findAirport(string name)
+airport *Graph::findAirport(string name)
 {
     /**
      * Finds an airport in the graph based on its name
@@ -99,7 +160,7 @@ void Graph::showNonstopRoutes(string from)
      * Displays all of the nonstop routes from a given airport, sorted by price low to high.
      * 
      * @param from the name of the starting airport
-     */ 
+     */
     airport *fromAirport = findAirport(from);
 
     priority_queue<adjVertex *, vector<adjVertex *>, adjVertexComparator> pQueue;
@@ -149,7 +210,7 @@ void Graph::showCheapestRoute(string from, string to)
     resetAll();
 }
 
-airport* Graph::getMinNode()
+airport *Graph::getMinNode()
 {
     /**
      * Returns the node with the smallest distance that has not yet been visited.
@@ -186,7 +247,7 @@ bool Graph::allVisitedCheck()
     return true;
 }
 
-airport* Graph::dijkstra(string start, string end)
+airport *Graph::dijkstra(string start, string end)
 {
     /**
      * Returns the airport for the starting airport.
@@ -247,8 +308,8 @@ void Graph::resetAll()
     /// Resets all airports in the graph
     for (airport *v : airports)
     {
-        v->visited = false; // unvisit
+        v->visited = false;    // unvisit
         v->distance = INT_MAX; // reset distance to intmax
-        v->parent = nullptr; // reset parent
+        v->parent = nullptr;   // reset parent
     }
 }
