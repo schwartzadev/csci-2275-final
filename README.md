@@ -4,7 +4,6 @@
 - Andrew Schwartz
 - Fall 2020
 
-
 ## Summary
 
 This project provides information about flight destinations and routes.
@@ -16,11 +15,29 @@ I travel for under $300?" and, "Where can I fly non-stop from Atlanta?"
 We use a directional graph to implement the route network, where nodes represent airports
 and edges represent flights. The edge weight is equal to the ticket cost for a flight.
 
-For answering questions about a specific airport (i.e. "Where are the cheapest travel
-locations within two stops of Los Angeles?"), we use a tree conversion of the route map,
-where the root of the tree is the starting airport.
-
 For questions that consider price, we use priority queues to sort flights by lowest cost
 to highest cost.
 
-(We also prevent repeating airports in the tree and limit the maximum depth.)
+## How to Run
+
+Run the code with `./run.sh`. If run.sh is not an executable, try `chmod +x run.sh`.
+
+## Dependencies
+
+None.
+
+## System Requirements
+
+This code should be OS-independent. If you want to generate flight data, you will
+need to use python 3. C++ is based on C++11.
+
+## Team Members
+
+* Andrew Schwartz ([@schwartzadev](https://github.com/schwartzadev/))
+
+## Contributors
+
+See [contributors](https://github.com/schwartzadev/csci-2275-final/graphs/contributors).
+
+## Open issues/bugs
+See [issues](https://github.com/schwartzadev/csci-2275-final/issues).
