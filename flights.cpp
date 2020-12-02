@@ -14,6 +14,12 @@ void die(string message)
 
 void generate_graph(Graph *g, std::string filename)
 {
+    /**
+     * Generates nodes and edges for a graph, based on an input file.
+     * 
+     * @param g a pointer to the graph to be generated
+     * @param filename a string equal to the filename of the input file
+     */
     ifstream fileVertices(filename);
 
     // non-existant or corrupted file
