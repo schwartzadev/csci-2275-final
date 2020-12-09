@@ -184,7 +184,7 @@ void Graph::showCheapestRoute(string from, string to)
      * Shows the cheapest route between two airports.
      * 
      * @param from the starting airport in the route
-     * @param from the destination airport in the route
+     * @param to the destination airport in the route
      */
     airport *v = dijkstra(from, to);
 
