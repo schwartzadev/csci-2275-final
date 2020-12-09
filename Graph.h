@@ -22,7 +22,6 @@ public:
     }
 };
 
-// todo refactor to airport
 struct airport
 {
     std::string name;
